@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="icon" href="img/faviconV2.png" type="image/png">
+
+</head>
+
+<body>
+    <!-- LINEA DE ARRIBA -->
+    <div class="bg-danger mx-auto p-1">
+        <div class="row">
+            <div class="col text-start text-light m-1">
+                #1 EN PRECIOS BAJOS
+            </div>
+            <div class="col text-end text-light">
+                <div>
+                    <a href="#" class="btn btn-outline-light mr-2">FAQs</a>
+                    <a href="#" class="btn btn-outline-light">CONTACTO</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR SUPERIOR PRINCIPAL -->
+    <nav class="navbar navbar-expand-lg navbar-light p-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../img/logo-tauro-website.png" class="img-fluid" alt="Bootstrap" width="130" height="45">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="#">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="#">Acerca de</a>
+                    </li>
+                </ul>
+                <form class="d-flex w-50" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </form>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item" id="login-link">
+                        <a class="nav-link" href="login">Acceso</a>
+                    </li>
+                    <li class="nav-item" id="register-link">
+                        <a class="nav-link" href="registro">Registro</a>
+                    </li>
+                    <li class="nav-item" id="user-info" style="display: none;">
+                        <span id="username"></span>
+                        <a href="/logout" class="btn btn-outline-danger ms-2">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FORMULARIO LOGIN -->
+    <div class="container login-container">
+        <div class="login-form">
+            <h2 class="text-center">Iniciar Sesión</h2>
+            <form action="/controladores/login" method="POST">
+                <div class="mb-3">
+                    <label for="usuario" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" id="usuario" name="usuario" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">Recordarme</label>
+                </div>
+                <button type="submit" class="btn btn-danger w-100">Ingresar</button>
+            </form>
+            <hr>
+            <p class="text-center">¿No tienes una cuenta? <a href="../registro.html">Regístrate aquí</a></p>
+            <p class="text-center">¿Olvidaste tu contraseña? <a href="recuperar-password">Restablecer aquí</a></p>
+        </div>
+    </div>
+
+    <!-- NAVBAR INFERIOR -->
+    <div class="container">
+        <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="../index.html" class="nav-link px-2 text-body-secondary">Inicio</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Contacto</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Acerca de</a></li>
+                <li class="nav-item"><a href="login" class="nav-link px-2 text-body-secondary">Acceso</a></li>
+                <li class="nav-item"><a href="registro" class="nav-link px-2 text-body-secondary">Registro</a></li>
+            </ul>
+            <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!--<script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>-->
+    
+    <script>
+        // Función para obtener el nombre del usuario desde el servidor
+        function getUserInfo() {
+            fetch('/user-info')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.usuario) {
+                        document.getElementById('user-info').style.display = 'block';
+                        document.getElementById('username').innerText = `Hola, ${data.usuario}`;
+                        document.getElementById('login-link').style.display = 'none';
+                        document.getElementById('register-link').style.display = 'none';
+                    }
+                });
+        }
+
+        // Llamar a la función al cargar la página
+        window.onload = getUserInfo;
+    </script>
+</body>
+
+</html>

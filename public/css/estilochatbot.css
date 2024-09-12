@@ -1,0 +1,68 @@
+/* Ajusta el ancho del modal y el espaciado derecho */
+.chat-modal .modal-dialog {
+    position: fixed;
+    right: 20px;
+    /* Añade espaciado desde el borde derecho */
+    top: 10%;
+    margin: 0;
+    width: 350px;
+    /* Ajusta el ancho del modal según sea necesario */
+}
+
+.chat-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    /* Ajusta el alto máximo del modal */
+}
+
+.chat-modal .modal-body {
+    overflow-y: auto;
+    /* Permite el desplazamiento del contenido del chat */
+    flex: 1;
+    /* Hace que el cuerpo del modal ocupe el espacio disponible */
+    padding: 15px;
+    /* Espaciado interno */
+}
+
+#chatContainer {
+    margin-bottom: 15px;
+    /* Espaciado entre el contenedor de chat y el formulario */
+}
+
+#chatForm {
+    position: sticky;
+    /* Mantiene el formulario en la parte inferior del modal */
+    bottom: 0;
+    /* Alinea el formulario en la parte inferior */
+    background-color: white;
+    /* Fondo blanco para el formulario */
+    padding: 10px;
+    /* Espaciado interno del formulario */
+    border-top: 1px solid #ddd;
+    /* Borde superior para separar del contenido del chat */
+}
+
+/* Mensajes del usuario a la derecha */
+.user-message {
+    text-align: right;
+    background-color: #d1ecf1; /* Color de fondo para el mensaje del usuario */
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    max-width: 80%;
+}
+
+/* Mensajes del chatbot a la izquierda */
+.bot-message {
+    text-align: left;
+    background-color: #f8d7da; /* Color de fondo para el mensaje del chatbot */
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    max-width: 80%;
+}
+
+

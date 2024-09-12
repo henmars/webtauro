@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilochatbot.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="icon" href="img/faviconV2.png" type="image/png">
+</head>
+
+<body>
+    <!-- Toast -->
+    <div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
+        <div id="loginToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header text-center">
+                <img src="img/logo-tauro-website-179x38.png" class="rounded img-fluid d-block mx-auto" alt="...">
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-center">
+                ¡Bienvenido, iniciaste sesión exitosamente!
+            </div>
+        </div>
+    </div>
+
+
+    <!-- LINEA SUPERIOR -->
+    <div class="bg-danger mx-auto p-1">
+        <div class="row">
+            <div class="col text-start text-light m-1">
+                #1 EN PRECIOS BAJOS
+            </div>
+            <div class="col text-end text-light">
+                <div>
+                    <a href="#" class="btn btn-outline-light mr-2">FAQs</a>
+                    <a href="#" class="btn btn-outline-light">CONTACTO</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR SUPERIOR PRINCIPAL -->
+    <nav class="navbar navbar-expand-lg navbar-light p-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="img/logo-tauro-website.png" class="img-fluid" alt="Bootstrap" width="130" height="45">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Acerca de</a>
+                    </li>
+                </ul>
+                <form class="d-flex w-50" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </form>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Estos elementos se ocultarán y mostrarán dinámicamente -->
+                    <li id="login-item" class="nav-item">
+                        <a class="nav-link" href="login">Acceso</a>
+                    </li>
+                    <li id="register-item" class="nav-item">
+                        <a class="nav-link" href="registro">Registro</a>
+                    </li>
+                    <!-- Espacio para mostrar el nombre del usuario y el botón de cerrar sesión -->
+                    <li id="user-item" class="nav-item" style="display: none;">
+                        <a id="user-name" class="nav-link" href="#"></a>
+                        <a href="/logout" class="btn btn-outline-danger ms-2">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CARRUSEL -->
+    <div id="carouselExampleIndicators" class="carousel slide">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="img/Banner-Belleza1.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="img/Banner-Hp1.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="img/logo-tauro-website.png" class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- NAVBAR INFERIOR -->
+    <div class="container">
+        <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="index.html" class="nav-link px-2 text-body-secondary">Inicio</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Contacto</a>
+                </li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Acerca de</a>
+                </li>
+                <li class="nav-item" id="login-infer-navbar"><a href="login"
+                        class="nav-link px-2 text-body-secondary">Acceso</a></li>
+                <li class="nav-item" id="registro-infer-navbar"><a href="registro"
+                        class="nav-link px-2 text-body-secondary">Registro</a>
+                </li>
+            </ul>
+            <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+        </footer>
+    </div>
+
+    <!-- Botón Aéreo -->
+    <div id="chatButton" class="position-fixed bottom-0 end-0 m-3" style="display: none;">
+        <button class="btn btn-primary rounded-circle bg-danger" id="openChatButton" style="width: 60px; height: 60px;">
+            <i class="bi bi-chat-dots" style="font-size: 24px;"></i>
+        </button>
+    </div>
+
+    <!-- Modal del Chat -->
+    <div class="modal fade chat-modal" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí irá el contenido del chat que se implementará posteriormente con Rasa -->
+                    <p id="userName"> <span id="userNameSpanChat"></span></p>
+                    <!--<p>Bienvenido al chat de soporte. ¿En qué puedo ayudarte hoy?</p>-->
+                    <div id="chatContainer">
+                        <!-- Contenedor de mensajes -->
+                    </div>
+                </div>
+                <form id="chatForm">
+                    <div class="input-group">
+                        <input type="text" id="chatInput" class="form-control" placeholder="Escribe un mensaje...">
+                        <button class="btn btn-primary bg-danger" type="submit">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!--<script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>-->
+
+
+
+    <script>
+        // Función para obtener el nombre del usuario desde el servidor
+
+        let userNameChat2 = ''; //Esta variable ayuda almacenar el nombre para que aparezca en el chatmodal
+
+        function getUserInfo() {
+            fetch('/user-info')
+                .then(response => response.json())
+                .then(data => {
+                    const loginItem = document.getElementById('login-item');
+                    const registerItem = document.getElementById('register-item');
+                    const userItem = document.getElementById('user-item');
+                    const chatButton = document.getElementById('chatButton');
+                    const userName = document.getElementById('user-name');
+                    const loginInferNavbar = document.getElementById('login-infer-navbar')
+                    const registroInferNavbar = document.getElementById('registro-infer-navbar')
+                    const userNameSpan = document.getElementById('userNameSpanChat');
+
+
+
+                    if (data.usuario) {
+                        // Mostrar nombre del usuario, botón de cerrar sesión y el botón aéreo
+                        loginItem.style.display = 'none';
+                        registerItem.style.display = 'none';
+                        userItem.style.display = 'flex';
+                        chatButton.style.display = 'block';
+                        loginInferNavbar.style.display = 'none'
+                        registroInferNavbar.style.display = 'none'
+                        userNameChat2 = data.usuario;
+                        userName.innerHTML = `Hola, <strong>${data.usuario}.</strong>`; //almacena el usuario para la parte superior del login
+                        userNameSpanChat.innerHTML = `Hola <strong>${data.usuario}</strong>, Bienvenido al chat de soporte. ¿En qué puedo ayudarte hoy? `; //Almacena el usuario para el mensaje de bienvenida del chatmodal
+                    } else {
+                        // Mostrar botones de acceso y registro, ocultar el botón aéreo
+                        loginItem.style.display = 'block';
+                        registerItem.style.display = 'block';
+                        userItem.style.display = 'none';
+                        chatButton.style.display = 'none';
+                    }
+                });
+        }
+
+        // Llamar a la función al cargar la página
+        window.onload = getUserInfo;
+
+        // Mostrar el modal de chat al hacer clic en el botón de chat
+       // Mostrar el modal de chat al hacer clic en el botón de chat
+document.addEventListener('DOMContentLoaded', function () {
+    const openChatButton = document.getElementById('openChatButton');
+    const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
+
+    // Manejar el clic en el botón de chat
+    openChatButton.addEventListener('click', () => {
+        chatModal.show(); // Muestra el modal
+    });
+
+    // Manejar el envío del formulario de chat
+    document.getElementById('chatForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Evita el comportamiento por defecto del formulario
+
+        const chatInput = document.getElementById('chatInput').value;
+
+        // Asegúrate de que el input no esté vacío
+        if (chatInput.trim() !== '') {
+            // Agregar el mensaje del usuario al contenedor de mensajes
+            const chatContainer = document.getElementById('chatContainer');
+            const userMessageElement = document.createElement('div');
+            userMessageElement.classList.add('user-message');
+            userMessageElement.innerHTML = `<strong>${userNameChat2}:</strong> ${chatInput}`; // Mensaje del usuario
+            chatContainer.appendChild(userMessageElement);
+
+
+            // Enviar el mensaje a la API de Rasa
+            fetch('/api/rasa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: chatInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Agregar la respuesta del chatbot al contenedor de mensajes
+                const botMessageElement = document.createElement('div');
+                botMessageElement.classList.add('bot-message');
+                botMessageElement.innerHTML = `<strong>TauroBot:</strong> ${data.response}`; // Respuesta del bot
+                chatContainer.appendChild(botMessageElement);
+
+                // Desplazar el contenedor de mensajes hacia abajo
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error al enviar el mensaje:', error);
+            });
+
+            // Limpiar el input después de enviar el mensaje
+            document.getElementById('chatInput').value = '';
+        }
+    });
+});
+
+
+    </script>
+
+
+    <!-- Scripts para mostrar que iniciaste sesión exitosamente -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('login') === 'success') {
+                var toastElement = document.getElementById('loginToast');
+                var toast = new bootstrap.Toast(toastElement, {
+                    autohide: false // Desactiva el autohide para que el toast no se cierre solo
+                });
+                toast.show();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+<!-- este script es para que cuando el usuario haga clic en el botón, se abra el modal del chat -->
+<!--
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatForm = document.getElementById('chatForm');
+            const messageInput = document.getElementById('messageInput');
+            const chatMessages = document.getElementById('chatMessages');
+
+            chatForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+                const message = messageInput.value;
+                if (!message) return;
+
+                // Envía el mensaje al servidor Rasa
+                fetch('http://localhost:5005/webhooks/rest/webhook', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sender: 'user', // Identificador del usuario, puede ser cualquier valor único
+                        message: message
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        chatMessages.innerHTML += `<div><strong>Tu:</strong> ${message}</div>`;
+                        data.forEach(message => {
+                            if (message.text) {
+                                chatMessages.innerHTML += `<div><strong>Bot:</strong> ${message.text}</div>`;
+                            }
+                        });
+                        messageInput.value = ''; // Limpiar el campo de entrada
+                        chatMessages.scrollTop = chatMessages.scrollHeight; // Desplazar hacia abajo
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+-->
