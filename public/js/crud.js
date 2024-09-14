@@ -1,5 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const userTableBody = document.querySelector('#userTable tbody');
+    const totalUsuarios = document.querySelector('#totalUsuarios');
+
+    // Obtener y mostrar el número total de usuarios
+    fetch('/api/usuarios/count')
+        .then(response => response.json())
+        .then(data => {
+            totalUsuarios.textContent = data.total; // Actualiza el texto con el número total
+        })
+        .catch(error => console.error('Error obteniendo el total de usuarios:', error));
 
     // Obtener y mostrar usuarios
     fetch('/api/usuarios')

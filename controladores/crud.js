@@ -105,4 +105,18 @@ router.delete('/usuarios/:id', (req, res) => {
     });
 });
 
+// Obtener el número total de usuarios
+router.get('/usuarios/count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS total FROM usuarios';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error obteniendo el número de usuarios:', error);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.json(results[0]); // Enviar solo el total
+        }
+    });
+});
+
+
 module.exports = router;

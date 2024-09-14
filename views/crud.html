@@ -10,9 +10,31 @@
 
 <body>
     <div class="container mt-4">
-        <h1 class="mb-4">CRUD de Usuarios</h1>
-        <button class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Añadir Usuario</button>
 
+        <!-- Fila con título CRUD de Usuarios y tarjeta de total de usuarios -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-8">
+                <h1>CRUD de Usuarios</h1>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end">
+                <!-- Tarjeta pequeña de total de usuarios -->
+                <div class="card text-white bg-danger" style="max-width: 10rem;">
+                    <div class="card-header">Total de Usuarios</div>
+                    <div class="card-body">
+                        <h6 class="card-title text-center">
+                            <span id="totalUsuarios">0</span>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón para añadir usuario -->
+        <div class="mb-3">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createModal">Añadir Usuario</button>
+        </div>
+
+        <!-- Tabla de usuarios -->
         <table class="table table-striped" id="userTable">
             <thead>
                 <tr>
@@ -78,8 +100,7 @@
                             <div class="mb-3">
                                 <label for="editPassword" class="form-label">Nueva Contraseña (opcional)</label>
                                 <input type="password" class="form-control" id="editPassword" name="password">
-                                <small class="form-text text-muted">Deja este campo vacío si no deseas cambiar la
-                                    contraseña.</small>
+                                <small class="form-text text-muted">Deja este campo vacío si no deseas cambiar la contraseña.</small>
                             </div>
                             <button type="submit" class="btn btn-danger">Actualizar</button>
                         </form>
@@ -88,8 +109,8 @@
             </div>
         </div>
 
-
     </div>
+
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script defer src="/js/crud.js"></script>
 </body>
