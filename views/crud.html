@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD de Usuarios</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-4">
         <h1 class="mb-4">CRUD de Usuarios</h1>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Añadir Usuario</button>
+        <button class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Añadir Usuario</button>
 
         <table class="table table-striped" id="userTable">
             <thead>
@@ -47,7 +49,7 @@
                                 <label for="password" class="form-label">Contraseña</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Añadir</button>
+                            <button type="submit" class="btn btn-danger">Añadir</button>
                         </form>
                     </div>
                 </div>
@@ -74,18 +76,22 @@
                                 <input type="email" class="form-control" id="editCorreo" name="correo" required>
                             </div>
                             <div class="mb-3">
-                                <label for="editPassword" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="editPassword" name="password" required>
+                                <label for="editPassword" class="form-label">Nueva Contraseña (opcional)</label>
+                                <input type="password" class="form-control" id="editPassword" name="password">
+                                <small class="form-text text-muted">Deja este campo vacío si no deseas cambiar la
+                                    contraseña.</small>
                             </div>
-                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                            <button type="submit" class="btn btn-danger">Actualizar</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
+
     </div>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script defer src="/js/crud.js"></script>
 </body>
+
 </html>

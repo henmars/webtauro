@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const loginRouter = require('./controladores/login');
 const registerRouter = require('./controladores/registro');
+const crudRouter = require('./controladores/crud');
 const rasaRouter = require('./controladores/rasa'); // Importa el nuevo router
 
 const app = express();
@@ -21,6 +22,22 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Middleware para verificar si el usuario está autenticado
+function isAuthenticated(req, res, next) {
+    if (req.session.usuario) {
+        return next();
+    }
+    res.redirect('/login');
+}
+
+// Middleware para redirigir si ya está logueado
+function redirectIfAuthenticated(req, res, next) {
+    if (req.session.usuario) {
+        return res.redirect('/');
+    }
+    next();
+}
+
 // Servir archivos estáticos desde la carpeta `public`
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -28,16 +45,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 
 // Rutas para servir HTML directamente
-app.get('/', (req, res) => {
+app.get('/', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/login', (req, res) => {
+// Redirigir a usuarios autenticados lejos de la página de login
+app.get('/login', redirectIfAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
-app.get('/registro', (req, res) => {
+app.get('/registro', redirectIfAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'registro.html'));
+});
+
+app.get('/crud', redirectIfAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'crud.html'));
 });
 
 // Rutas adicionales
@@ -62,6 +84,7 @@ app.get('/logout', (req, res) => {
 // Usar las rutas para manejar solicitudes POST
 app.use('/controladores', loginRouter);
 app.use('/controladores', registerRouter);
+app.use('/api', crudRouter);
 app.use('/api', rasaRouter); // Usa el nuevo router
 
 // Inicia el servidor
