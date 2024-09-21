@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/estilochatbot.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="icon" href="img/faviconV2.png" type="image/png">
 </head>
 
@@ -75,6 +76,9 @@
                     </li>
                     <li id="register-item" class="nav-item">
                         <a class="nav-link" href="registro">Registro</a>
+                    </li>
+                    <li id="crud-item" class="nav-item" style="display: none;">
+                        <a class="nav-link" href="crud.html">CRUD de Usuarios</a>
                     </li>
                     <!-- Espacio para mostrar el nombre del usuario y el botón de cerrar sesión -->
                     <li id="user-item" class="nav-item" style="display: none;">
@@ -201,6 +205,7 @@
                     const loginItem = document.getElementById('login-item');
                     const registerItem = document.getElementById('register-item');
                     const userItem = document.getElementById('user-item');
+                    const crudItem = document.getElementById('crud-item'); // Enlace CRUD
                     const chatButton = document.getElementById('chatButton');
                     const userName = document.getElementById('user-name');
                     const loginInferNavbar = document.getElementById('login-infer-navbar')
@@ -220,12 +225,23 @@
                         userNameChat2 = data.usuario;
                         userName.innerHTML = `Hola, <strong>${data.usuario}.</strong>`; //almacena el usuario para la parte superior del login
                         userNameSpanChat.innerHTML = `Hola <strong>${data.usuario}</strong>, Bienvenido al chat de soporte. ¿En qué puedo ayudarte hoy? `; //Almacena el usuario para el mensaje de bienvenida del chatmodal
+
+                        //
+                        // Mostrar enlace CRUD según el rol del usuario
+                        if (data.rol === 'Administrador' || data.rol === 'Desarrollador') {
+                            crudItem.style.display = 'block';
+                        } else {
+                            crudItem.style.display = 'none';
+                        }
+
+
                     } else {
                         // Mostrar botones de acceso y registro, ocultar el botón aéreo
                         loginItem.style.display = 'block';
                         registerItem.style.display = 'block';
                         userItem.style.display = 'none';
                         chatButton.style.display = 'none';
+                        crudItem.style.display = 'none'; // Asegúrate de ocultar también el enlace CRUD
                     }
                 });
         }
@@ -234,60 +250,60 @@
         window.onload = getUserInfo;
 
         // Mostrar el modal de chat al hacer clic en el botón de chat
-       // Mostrar el modal de chat al hacer clic en el botón de chat
-document.addEventListener('DOMContentLoaded', function () {
-    const openChatButton = document.getElementById('openChatButton');
-    const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
+        // Mostrar el modal de chat al hacer clic en el botón de chat
+        document.addEventListener('DOMContentLoaded', function () {
+            const openChatButton = document.getElementById('openChatButton');
+            const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
 
-    // Manejar el clic en el botón de chat
-    openChatButton.addEventListener('click', () => {
-        chatModal.show(); // Muestra el modal
-    });
-
-    // Manejar el envío del formulario de chat
-    document.getElementById('chatForm').addEventListener('submit', function (e) {
-        e.preventDefault(); // Evita el comportamiento por defecto del formulario
-
-        const chatInput = document.getElementById('chatInput').value;
-
-        // Asegúrate de que el input no esté vacío
-        if (chatInput.trim() !== '') {
-            // Agregar el mensaje del usuario al contenedor de mensajes
-            const chatContainer = document.getElementById('chatContainer');
-            const userMessageElement = document.createElement('div');
-            userMessageElement.classList.add('user-message');
-            userMessageElement.innerHTML = `<strong>${userNameChat2}:</strong> ${chatInput}`; // Mensaje del usuario
-            chatContainer.appendChild(userMessageElement);
-
-
-            // Enviar el mensaje a la API de Rasa
-            fetch('/api/rasa', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message: chatInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Agregar la respuesta del chatbot al contenedor de mensajes
-                const botMessageElement = document.createElement('div');
-                botMessageElement.classList.add('bot-message');
-                botMessageElement.innerHTML = `<strong>TauroBot:</strong> ${data.response}`; // Respuesta del bot
-                chatContainer.appendChild(botMessageElement);
-
-                // Desplazar el contenedor de mensajes hacia abajo
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            })
-            .catch(error => {
-                console.error('Error al enviar el mensaje:', error);
+            // Manejar el clic en el botón de chat
+            openChatButton.addEventListener('click', () => {
+                chatModal.show(); // Muestra el modal
             });
 
-            // Limpiar el input después de enviar el mensaje
-            document.getElementById('chatInput').value = '';
-        }
-    });
-});
+            // Manejar el envío del formulario de chat
+            document.getElementById('chatForm').addEventListener('submit', function (e) {
+                e.preventDefault(); // Evita el comportamiento por defecto del formulario
+
+                const chatInput = document.getElementById('chatInput').value;
+
+                // Asegúrate de que el input no esté vacío
+                if (chatInput.trim() !== '') {
+                    // Agregar el mensaje del usuario al contenedor de mensajes
+                    const chatContainer = document.getElementById('chatContainer');
+                    const userMessageElement = document.createElement('div');
+                    userMessageElement.classList.add('user-message');
+                    userMessageElement.innerHTML = `<strong>${userNameChat2}:</strong> ${chatInput}`; // Mensaje del usuario
+                    chatContainer.appendChild(userMessageElement);
+
+
+                    // Enviar el mensaje a la API de Rasa
+                    fetch('/api/rasa', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message: chatInput })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Agregar la respuesta del chatbot al contenedor de mensajes
+                            const botMessageElement = document.createElement('div');
+                            botMessageElement.classList.add('bot-message');
+                            botMessageElement.innerHTML = `<strong>TauroBot:</strong> ${data.response}`; // Respuesta del bot
+                            chatContainer.appendChild(botMessageElement);
+
+                            // Desplazar el contenedor de mensajes hacia abajo
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                        })
+                        .catch(error => {
+                            console.error('Error al enviar el mensaje:', error);
+                        });
+
+                    // Limpiar el input después de enviar el mensaje
+                    document.getElementById('chatInput').value = '';
+                }
+            });
+        });
 
 
     </script>

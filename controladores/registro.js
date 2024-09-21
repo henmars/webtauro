@@ -42,9 +42,22 @@ router.post('/registro', (req, res) => {
                         return res.status(500).send('Error en el servidor');
                     }
 
-                    // Redirige a la página de inicio de sesión con un mensaje de éxito
-                    res.redirect('/login?register=success');
+                    // Obtiene el ID del nuevo usuario
+                    const nuevoUsuarioId = results.insertId;
+
+                    // Asigna el rol "Cliente" (ID 3) al nuevo usuario
+                    const queryInsertUserRole = 'INSERT INTO usuarios_roles (id_usuario, id_rol) VALUES (?, ?)';
+                    connection.execute(queryInsertUserRole, [nuevoUsuarioId, 3], (err) => {
+                        if (err) {
+                            console.error('Error al asignar el rol al usuario:', err);
+                            return res.status(500).send('Error en el servidor');
+                        }
+
+                        // Redirige a la página de inicio de sesión con un mensaje de éxito
+                        res.redirect('/login?register=success');
+                    });
                 });
+
             });
         }
     });

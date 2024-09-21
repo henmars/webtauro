@@ -1,11 +1,16 @@
 const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcrypt');
-const connection = require('../modelo/db'); // Importa la conexión a la base de datos
+const connection = require('../modelo/db'); // Asegúrate que tienes la conexión a la base de datos
+const router = express.Router();
 
-// Obtener todos los usuarios
+// Obtener todos los usuarios con su rol
 router.get('/usuarios', (req, res) => {
-    const query = 'SELECT * FROM usuarios';
+    const query = `
+        SELECT u.id, u.usuario, u.correo, r.nombre_rol
+        FROM usuarios u
+        LEFT JOIN usuarios_roles ur ON u.id = ur.id_usuario
+        LEFT JOIN roles r ON ur.id_rol = r.id
+    `;
     connection.query(query, (error, results) => {
         if (error) {
             console.error('Error obteniendo los usuarios:', error);
@@ -16,36 +21,57 @@ router.get('/usuarios', (req, res) => {
     });
 });
 
-// Crear un nuevo usuario con contraseña cifrada
+// Obtener todos los roles
+router.get('/roles', (req, res) => {
+    const query = 'SELECT * FROM roles';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error obteniendo roles:', error);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// Crear un nuevo usuario con rol
 router.post('/usuarios', async (req, res) => {
-    const { usuario, correo, password } = req.body;
+    const { usuario, correo, password, rol } = req.body;
+
+    if (!usuario || !correo || !password || !rol) {
+        return res.status(400).send('Todos los campos son requeridos');
+    }
 
     try {
-        if (!usuario || !correo || !password) {
-            return res.status(400).send('Todos los campos son requeridos');
-        }
-
         // Cifrar la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
-        const query = 'INSERT INTO usuarios (usuario, correo, password) VALUES (?, ?, ?)';
-        connection.query(query, [usuario, correo, hashedPassword], (error, results) => {
+        const queryUsuario = 'INSERT INTO usuarios (usuario, correo, password) VALUES (?, ?, ?)';
+        connection.query(queryUsuario, [usuario, correo, hashedPassword], (error, results) => {
             if (error) {
                 console.error('Error creando usuario:', error);
-                res.status(500).send('Error en el servidor');
-            } else {
-                res.status(201).send('Usuario creado exitosamente');
+                return res.status(500).send('Error en el servidor');
             }
+
+            const userId = results.insertId;
+            const queryRol = 'INSERT INTO usuarios_roles (id_usuario, id_rol) VALUES (?, ?)';
+            connection.query(queryRol, [userId, rol], (error) => {
+                if (error) {
+                    console.error('Error asignando rol:', error);
+                    return res.status(500).send('Error en el servidor');
+                }
+                res.status(201).send('Usuario y rol creados exitosamente');
+            });
         });
     } catch (error) {
-        console.error('Error cifrando la contraseña:', error);
+        console.error('Error procesando la solicitud:', error);
         res.status(500).send('Error en el servidor');
     }
 });
 
-// Actualizar un usuario con contraseña opcional
+// Actualizar un usuario y su rol
 router.put('/usuarios/:id', async (req, res) => {
     const { id } = req.params;
-    const { usuario, correo, password } = req.body;
+    const { usuario, correo, password, rol } = req.body;
 
     const updates = [];
     const params = [];
@@ -62,7 +88,6 @@ router.put('/usuarios/:id', async (req, res) => {
 
     if (password) {
         try {
-            // Cifrar la nueva contraseña
             const hashedPassword = await bcrypt.hash(password, 10);
             updates.push('password = ?');
             params.push(hashedPassword);
@@ -72,38 +97,69 @@ router.put('/usuarios/:id', async (req, res) => {
         }
     }
 
-    if (updates.length === 0) {
-        return res.status(400).send('No se proporcionaron datos para actualizar');
+    if (updates.length > 0) {
+        const query = `UPDATE usuarios SET ${updates.join(', ')} WHERE id = ?`;
+        params.push(id);
+
+        connection.query(query, params, (error) => {
+            if (error) {
+                console.error('Error actualizando usuario:', error);
+                return res.status(500).send('Error en el servidor');
+            }
+        });
     }
 
-    // Agregar la condición para el ID
-    params.push(id);
-
-    const query = `UPDATE usuarios SET ${updates.join(', ')} WHERE id = ?`;
-
-    connection.query(query, params, (error, results) => {
+    // Actualizar rol del usuario
+    const queryRol = 'UPDATE usuarios_roles SET id_rol = ? WHERE id_usuario = ?';
+    connection.query(queryRol, [rol, id], (error) => {
         if (error) {
-            console.error('Error actualizando usuario:', error);
-            res.status(500).send('Error en el servidor');
-        } else {
-            res.send('Usuario actualizado exitosamente');
+            console.error('Error actualizando rol:', error);
+            return res.status(500).send('Error en el servidor');
         }
+        res.send('Usuario y rol actualizados exitosamente');
     });
 });
 
-// Eliminar un usuario
+// Eliminar un usuario y su rol
 router.delete('/usuarios/:id', (req, res) => {
     const { id } = req.params;
-    const query = 'DELETE FROM usuarios WHERE id = ?';
-    connection.query(query, [id], (error, results) => {
+    const queryUsuario = 'DELETE FROM usuarios WHERE id = ?';
+    const queryRol = 'DELETE FROM usuarios_roles WHERE id_usuario = ?';
+
+    connection.query(queryRol, [id], (error) => {
         if (error) {
-            console.error('Error eliminando usuario:', error);
-            res.status(500).send('Error en el servidor');
-        } else {
-            res.send('Usuario eliminado exitosamente');
+            console.error('Error eliminando rol del usuario:', error);
+            return res.status(500).send('Error en el servidor');
         }
+
+        connection.query(queryUsuario, [id], (error) => {
+            if (error) {
+                console.error('Error eliminando usuario:', error);
+                return res.status(500).send('Error en el servidor');
+            }
+            res.send('Usuario y rol eliminados exitosamente');
+        });
     });
 });
+
+// Crear un nuevo rol
+router.post('/roles', (req, res) => {
+    const { nombre } = req.body;
+
+    if (!nombre) {
+        return res.status(400).send('El nombre del rol es requerido');
+    }
+
+    const query = 'INSERT INTO roles (nombre_rol) VALUES (?)';
+    connection.query(query, [nombre], (error) => {
+        if (error) {
+            console.error('Error creando rol:', error);
+            return res.status(500).send('Error en el servidor');
+        }
+        res.status(201).send('Rol creado exitosamente');
+    });
+});
+
 
 // Obtener el número total de usuarios
 router.get('/usuarios/count', (req, res) => {
@@ -117,6 +173,5 @@ router.get('/usuarios/count', (req, res) => {
         }
     });
 });
-
 
 module.exports = router;
