@@ -64,6 +64,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Acerca de</a>
                     </li>
+                    <li class="nav-item" id="crud-item">
+                        <a class="nav-link" href="crud">CRUD</a>
+                    </li>
                 </ul>
                 <form class="d-flex w-50" role="search">
                     <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
@@ -194,9 +197,7 @@
 
 
     <script>
-        // Función para obtener el nombre del usuario desde el servidor
-
-        let userNameChat2 = ''; //Esta variable ayuda almacenar el nombre para que aparezca en el chatmodal
+        let userNameChat2 = ''; // Esta variable ayuda a almacenar el nombre para que aparezca en el chat modal
 
         function getUserInfo() {
             fetch('/user-info')
@@ -208,48 +209,39 @@
                     const crudItem = document.getElementById('crud-item'); // Enlace CRUD
                     const chatButton = document.getElementById('chatButton');
                     const userName = document.getElementById('user-name');
-                    const loginInferNavbar = document.getElementById('login-infer-navbar')
-                    const registroInferNavbar = document.getElementById('registro-infer-navbar')
-                    const userNameSpan = document.getElementById('userNameSpanChat');
-
-
+                    const loginInferNavbar = document.getElementById('login-infer-navbar');
+                    const registroInferNavbar = document.getElementById('registro-infer-navbar');
+                    const userNameSpanChat = document.getElementById('userNameSpanChat');
 
                     if (data.usuario) {
-                        // Mostrar nombre del usuario, botón de cerrar sesión y el botón aéreo
+                        // Mostrar nombre del usuario, botón de cerrar sesión y el botón de chat
                         loginItem.style.display = 'none';
                         registerItem.style.display = 'none';
                         userItem.style.display = 'flex';
                         chatButton.style.display = 'block';
-                        loginInferNavbar.style.display = 'none'
-                        registroInferNavbar.style.display = 'none'
+                        loginInferNavbar.style.display = 'none';
+                        registroInferNavbar.style.display = 'none';
                         userNameChat2 = data.usuario;
-                        userName.innerHTML = `Hola, <strong>${data.usuario}.</strong>`; //almacena el usuario para la parte superior del login
-                        userNameSpanChat.innerHTML = `Hola <strong>${data.usuario}</strong>, Bienvenido al chat de soporte. ¿En qué puedo ayudarte hoy? `; //Almacena el usuario para el mensaje de bienvenida del chatmodal
+                        userName.innerHTML = `Hola, <strong>${data.usuario}.</strong>`;
+                        userNameSpanChat.innerHTML = `Hola <strong>${data.usuario}</strong>, Bienvenido al chat de soporte. ¿En qué puedo ayudarte hoy?`;
 
-                        //
-                        // Mostrar enlace CRUD según el rol del usuario
-                        if (data.rol === 'Administrador' || data.rol === 'Desarrollador') {
-                            crudItem.style.display = 'block';
-                        } else {
-                            crudItem.style.display = 'none';
-                        }
-
-
+                        // Mostrar o ocultar el enlace CRUD según el rol
+                        crudItem.style.display = (data.rol === 1 || data.rol === 2) ? 'block' : 'none'; // Mostrar enlace CRUD solo para Admin y Dev
                     } else {
-                        // Mostrar botones de acceso y registro, ocultar el botón aéreo
+                        // Mostrar botones de acceso y registro, ocultar el botón de chat
                         loginItem.style.display = 'block';
                         registerItem.style.display = 'block';
                         userItem.style.display = 'none';
                         chatButton.style.display = 'none';
                         crudItem.style.display = 'none'; // Asegúrate de ocultar también el enlace CRUD
                     }
+
                 });
         }
 
         // Llamar a la función al cargar la página
         window.onload = getUserInfo;
 
-        // Mostrar el modal de chat al hacer clic en el botón de chat
         // Mostrar el modal de chat al hacer clic en el botón de chat
         document.addEventListener('DOMContentLoaded', function () {
             const openChatButton = document.getElementById('openChatButton');
@@ -274,7 +266,6 @@
                     userMessageElement.classList.add('user-message');
                     userMessageElement.innerHTML = `<strong>${userNameChat2}:</strong> ${chatInput}`; // Mensaje del usuario
                     chatContainer.appendChild(userMessageElement);
-
 
                     // Enviar el mensaje a la API de Rasa
                     fetch('/api/rasa', {
@@ -304,10 +295,7 @@
                 }
             });
         });
-
-
     </script>
-
 
     <!-- Scripts para mostrar que iniciaste sesión exitosamente -->
     <script>
@@ -323,46 +311,8 @@
         });
     </script>
 
+
+
 </body>
 
 </html>
-
-<!-- este script es para que cuando el usuario haga clic en el botón, se abra el modal del chat -->
-<!--
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const chatForm = document.getElementById('chatForm');
-            const messageInput = document.getElementById('messageInput');
-            const chatMessages = document.getElementById('chatMessages');
-
-            chatForm.addEventListener('submit', function (event) {
-                event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
-
-                const message = messageInput.value;
-                if (!message) return;
-
-                // Envía el mensaje al servidor Rasa
-                fetch('http://localhost:5005/webhooks/rest/webhook', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        sender: 'user', // Identificador del usuario, puede ser cualquier valor único
-                        message: message
-                    })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        chatMessages.innerHTML += `<div><strong>Tu:</strong> ${message}</div>`;
-                        data.forEach(message => {
-                            if (message.text) {
-                                chatMessages.innerHTML += `<div><strong>Bot:</strong> ${message.text}</div>`;
-                            }
-                        });
-                        messageInput.value = ''; // Limpiar el campo de entrada
-                        chatMessages.scrollTop = chatMessages.scrollHeight; // Desplazar hacia abajo
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
-        });
-    </script>
--->

@@ -58,14 +58,19 @@ app.get('/registro', redirectIfAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'registro.html'));
 });
 
-app.get('/crud', redirectIfAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'crud.html'));
+app.get('/crud', isAuthenticated, (req, res) => {
+    // Asegúrate de que solo usuarios con rol Admin o Dev puedan acceder a esta ruta
+    if (req.session.rol === 1 || req.session.rol === 2) {
+        res.sendFile(path.join(__dirname, 'views', 'crud.html'));
+    } else {
+        res.status(403).send('Acceso denegado');
+    }
 });
 
 // Rutas adicionales
 app.get('/user-info', (req, res) => {
     if (req.session.usuario) {
-        res.json({ usuario: req.session.usuario });
+        res.json({ usuario: req.session.usuario, rol: req.session.rol });
     } else {
         res.json({});
     }

@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router(); // Asegúrate de definir el router aquí
 const bcrypt = require('bcrypt');
 const connection = require('../modelo/db'); // Importa la conexión a la base de datos
 
@@ -7,7 +7,12 @@ const connection = require('../modelo/db'); // Importa la conexión a la base de
 router.post('/login', (req, res) => {
     const { usuario, password } = req.body;
 
-    const query = 'SELECT * FROM usuarios WHERE usuario = ?';
+    // Asegúrate de que `usuario` y `password` están definidos
+    if (!usuario || !password) {
+        return res.status(400).send('Usuario y contraseña son requeridos');
+    }
+
+    const query = 'SELECT u.id, u.usuario, u.password, ur.id_rol FROM usuarios u LEFT JOIN usuarios_roles ur ON u.id = ur.id_usuario WHERE u.usuario = ?';
     connection.execute(query, [usuario], (err, results) => {
         if (err) {
             console.error('Error en la consulta:', err);
@@ -25,17 +30,21 @@ router.post('/login', (req, res) => {
                 }
 
                 if (result) {
+                    // Almacena el usuario y rol en la sesión
                     req.session.usuario = user.usuario;
-                    res.redirect('/?login=success');
+                    req.session.rol = user.id_rol; // Almacena el rol del usuario desde la tabla usuarios_roles
+                    // Para hacer pruebas, puedes enviar una respuesta JSON en lugar de redirigir
+                    //return res.json({ success: true, message: 'Inicio de sesión exitoso', rol: user.id_rol });
+                    // Para redireccionar:
+                     res.redirect('/?login=success');
                 } else {
-                    res.status(401).send('Contraseña incorrecta');
+                    return res.status(401).send('Contraseña incorrecta');
                 }
             });
         } else {
-            res.status(404).send('El usuario no existe');
+            return res.status(404).send('El usuario no existe');
         }
     });
 });
-
 
 module.exports = router;
