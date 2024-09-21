@@ -21,15 +21,71 @@ router.get('/usuarios', (req, res) => {
     });
 });
 
+// Obtener todos los usuarios con su rol y paginación
+router.get('/usuarios/:page', (req, res) => {
+    const page = parseInt(req.params.page, 5) || 1; // Convertir a número
+    const limit = 5; // Número de usuarios por página
+    const offset = (page - 1) * limit;
+
+    const query = `
+        SELECT u.id, u.usuario, u.correo, r.nombre_rol, ur.id_rol AS id_rol
+        FROM usuarios u
+        LEFT JOIN usuarios_roles ur ON u.id = ur.id_usuario
+        LEFT JOIN roles r ON ur.id_rol = r.id
+        LIMIT ? OFFSET ?
+    `;
+    connection.query(query, [limit, offset], (error, results) => {
+        if (error) {
+            console.error('Error obteniendo los usuarios:', error);
+            res.status(500).send('Error en el servidor');
+        } else {
+            // Obtener el total de usuarios
+            connection.query('SELECT COUNT(*) AS total FROM usuarios', (err, countResult) => {
+                if (err) {
+                    console.error('Error contando usuarios:', err);
+                    return res.status(500).send('Error en el servidor');
+                }
+                const total = countResult[0].total;
+                res.json({ users: results, total });
+            });
+        }
+    });
+});
+
 // Obtener todos los roles
 router.get('/roles', (req, res) => {
-    const query = 'SELECT * FROM roles';
+    const query = 'SELECT * FROM roles ORDER BY id ASC';
     connection.query(query, (error, results) => {
         if (error) {
             console.error('Error obteniendo roles:', error);
             res.status(500).send('Error en el servidor');
         } else {
             res.json(results);
+        }
+    });
+});
+
+// Obtener todos los roles con paginación
+router.get('/roles/:page', (req, res) => {
+    const page = parseInt(req.params.page, 5) || 1;
+    const limit = 5;
+    const offset = (page - 1) * limit;
+
+    const query = 'SELECT * FROM roles ORDER BY id ASC LIMIT ? OFFSET ?';
+    connection.query(query, [limit, offset], (error, results) => {
+        if (error) {
+            console.error('Error obteniendo roles:', error);
+            res.status(500).send('Error en el servidor');
+        } else {
+            // Obtener el total de roles
+            connection.query('SELECT COUNT(*) AS total FROM roles', (err, countResult) => {
+                if (err) {
+                    console.error('Error contando roles:', err);
+                    return res.status(500).send('Error en el servidor');
+                }
+                const total = countResult[0].total;
+                res.json({ roles: results, total });
+            });
         }
     });
 });
@@ -153,7 +209,7 @@ router.post('/roles', (req, res) => {
     const query = 'INSERT INTO roles (nombre_rol) VALUES (?)';
     connection.query(query, [nombre], (error) => {
         if (error) {
-            console.error('Error creando rol:', error);
+            console.error('Error creando rol :', error);
             return res.status(500).send('Error en el servidor');
         }
         res.status(201).send('Rol creado exitosamente');
@@ -174,27 +230,6 @@ router.delete('/roles/:id', (req, res) => {
     });
 });
 
-// Actualizar un rol
-/*router.put('/roles/:id', (req, res) => {
-    const { id } = req.params;
-    const { nombre } = req.body;
-
-    if (!nombre) {
-        return res.status(400).send('El nombre del rol es requerido');
-    }
-
-    const query = 'UPDATE roles SET nombre_rol = ? WHERE id = ?';
-    connection.query(query, [nombre, id], (error) => {
-        if (error) {
-            console.error('Error actualizando rol:', error);
-            return res.status(500).send('Error en el servidor');
-        }
-        res.send('Rol actualizado exitosamente');
-    });
-});
-*/
-
-
 // Obtener el número total de usuarios
 router.get('/usuarios/count', (req, res) => {
     const query = 'SELECT COUNT(*) AS total FROM usuarios';
@@ -203,7 +238,26 @@ router.get('/usuarios/count', (req, res) => {
             console.error('Error obteniendo el número de usuarios:', error);
             res.status(500).send('Error en el servidor');
         } else {
-            res.json(results[0]); // Enviar solo el total
+            const total = results[0].total;
+            const limit = 5; // Número de usuarios por página
+            const pages = Math.ceil(total / limit);
+            res.json({ total, pages });
+        }
+    });
+});
+
+// Obtener el número total de roles
+router.get('/roles/count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS total FROM roles';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error obteniendo el número de roles:', error);
+            res.status(500).send('Error en el servidor');
+        } else {
+            const total = results[0].total;
+            const limit = 5; // Número de roles por página
+            const pages = Math.ceil(total / limit);
+            res.json({ total, pages });
         }
     });
 });

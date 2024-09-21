@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const rolesSelect = document.querySelector('#rol');
     const editRolesSelect = document.querySelector('#editRol');
     const totalUsuarios = document.querySelector('#totalUsuarios');
+    const userPagination = document.querySelector('#user-pagination');
+    const rolePagination = document.querySelector('#role-pagination');
+    const limit = 5; // Número de elementos por página
 
     // Obtener y mostrar el número total de usuarios
     fetch('/api/usuarios/count')
@@ -12,26 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error obteniendo el total de usuarios:', error));
 
-    // Obtener y mostrar los usuarios con su rol
-    fetch('/api/usuarios')
+    // Obtener y mostrar la primera página de usuarios con su rol
+    fetch(`/api/usuarios/1`)
         .then(response => response.json())
-        .then(users => {
+        .then(data => {
+            const users = data.users;
             userTableBody.innerHTML = '';
             users.forEach(user => {
                 const row = `
-                        <tr>
-                            <td>${user.id}</td>
-                            <td>${user.usuario}</td>
-                            <td>${user.correo}</td>
-                            <td>${user.nombre_rol || 'Sin Rol'}</td>
-                            <td>
-                                <button class="btn btn-warning btn-edit" data-id="${user.id}" data-usuario="${user.usuario}" data-correo="${user.correo}" data-rol-id="${user.id_rol}">Editar</button>
-                                <button class="btn btn-danger btn-delete" data-id="${user.id}">Eliminar</button>
-                            </td>
-                        </tr>
-                    `;
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.usuario}</td>
+                        <td>${user.correo}</td>
+                        <td>${user.nombre_rol || 'Sin Rol'}</td>
+                        <td>
+                            <button class="btn btn-warning btn-edit" data-id="${user.id}" data-usuario="${user.usuario}" data-correo="${user.correo}" data-rol-id="${user.id_rol}">Editar</button>
+                            <button class="btn btn-danger btn-delete" data-id="${user.id}">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
                 userTableBody.insertAdjacentHTML('beforeend', row);
             });
+
+            // Actualiza la paginación de usuarios
+            updatePagination(data.total, limit, 1);
         })
         .catch(error => console.error('Error obteniendo usuarios:', error));
 
@@ -64,14 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error añadiendo usuario:', error));
     });
 
-    //
-
-
-    // Obtener y mostrar los roles en la tabla gestión de roles
-
-    fetch('/api/roles')
+    // Obtener y mostrar la primera página de roles
+    fetch(`/api/roles/1`)
         .then(response => response.json())
-        .then(roles => {
+        .then(data => {
+            const roles = data.roles;
             const rolesTableBody = document.querySelector('#rolesTable tbody');
             rolesTableBody.innerHTML = ''; // Limpiar el contenido previo
             roles.forEach(role => {
@@ -86,13 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 rolesTableBody.insertAdjacentHTML('beforeend', row);
             });
+
+            // Actualizar la paginación de roles
+            updateRolePagination(data.total, 1);
         })
         .catch(error => console.error('Error obteniendo roles:', error));
-
-
-
-
-    //
 
     // Editar un usuario
     userTableBody.addEventListener('click', (e) => {
@@ -126,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
 
     // Actualizar un usuario
     document.querySelector('#editUserForm').addEventListener('submit', function (e) {
@@ -162,8 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error añadiendo rol:', error));
     });
-
-
 
     // Eliminar un rol
     document.querySelector('#rolesTable').addEventListener('click', (e) => {
@@ -218,8 +217,96 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Paginación de usuarios
+    userPagination.addEventListener('click', (e) => {
+        if (e.target.classList.contains('page-link')) {
+            e.preventDefault();
 
+            const pageNumber = e.target.textContent;
+            fetch(`/api/usuarios/${pageNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    const users = data.users;
 
+                    // Actualiza la tabla de usuarios
+                    userTableBody.innerHTML = '';
+                    users.forEach(user => {
+                        const row = `
+                            <tr>
+                                <td>${user.id}</td>
+                                <td>${user.usuario}</td>
+                                <td>${user.correo}</td>
+                                <td>${user.nombre_rol || 'Sin Rol'}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-edit" data-id="${user.id}" data-usuario="${user.usuario}" data-correo="${user.correo}" data-rol-id="${user.id_rol}">Editar</button>
+                                    <button class="btn btn-danger btn-delete" data-id="${user.id}">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                        userTableBody.insertAdjacentHTML('beforeend', row);
+                    });
 
+                    // Actualiza la paginación de usuarios
+                    updatePagination(data.total, limit, pageNumber);
+                })
+                .catch(error => console.error('Error obteniendo usuarios:', error));
+        }
+    });
 
+    // Paginación de roles
+    rolePagination.addEventListener('click', (e) => {
+        if (e.target.classList.contains('page-link')) {
+            e.preventDefault();
+
+            const pageNumber = e.target.textContent;
+            fetch(`/api/roles/${pageNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    const roles = data.roles; // Accede a la lista de roles
+                    const rolesTableBody = document.querySelector('#rolesTable tbody');
+                    rolesTableBody.innerHTML = ''; // Limpiar el contenido previo
+
+                    roles.forEach(role => {
+                        const row = `
+                            <tr>
+                                <td>${role.id}</td>
+                                <td>${role.nombre_rol}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-delete-role" data-id="${role.id}">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                        rolesTableBody.insertAdjacentHTML('beforeend', row);
+                    });
+
+                    // Actualiza la paginación de roles
+                    updateRolePagination(data.total, pageNumber);
+                })
+                .catch(error => console.error('Error obteniendo roles:', error));
+        }
+    });
+
+    // Función para actualizar la paginación de roles
+    function updateRolePagination(total, currentPage) {
+        const totalPages = Math.ceil(total / limit);
+        rolePagination.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const activeClass = i == currentPage ? 'active' : '';
+            const pageLink = `<li class="page-item ${activeClass}"><a class="page-link" href="#">${i}</a></li>`;
+            rolePagination.insertAdjacentHTML('beforeend', pageLink);
+        }
+    }
+
+    // Función para actualizar la paginación de usuarios
+    function updatePagination(total, limit, currentPage) {
+        const totalPages = Math.ceil(total / limit);
+        userPagination.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const activeClass = i == currentPage ? 'active' : '';
+            const pageLink = `<li class="page-item ${activeClass}"><a class="page-link" href="#">${i}</a></li>`;
+            userPagination.insertAdjacentHTML('beforeend', pageLink);
+        }
+    }
 });
