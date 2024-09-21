@@ -160,6 +160,40 @@ router.post('/roles', (req, res) => {
     });
 });
 
+// Eliminar un rol
+router.delete('/roles/:id', (req, res) => {
+    const { id } = req.params;
+
+    const query = 'DELETE FROM roles WHERE id = ?';
+    connection.query(query, [id], (error) => {
+        if (error) {
+            console.error('Error eliminando rol:', error);
+            return res.status(500).send('Error en el servidor');
+        }
+        res.send('Rol eliminado exitosamente');
+    });
+});
+
+// Actualizar un rol
+/*router.put('/roles/:id', (req, res) => {
+    const { id } = req.params;
+    const { nombre } = req.body;
+
+    if (!nombre) {
+        return res.status(400).send('El nombre del rol es requerido');
+    }
+
+    const query = 'UPDATE roles SET nombre_rol = ? WHERE id = ?';
+    connection.query(query, [nombre, id], (error) => {
+        if (error) {
+            console.error('Error actualizando rol:', error);
+            return res.status(500).send('Error en el servidor');
+        }
+        res.send('Rol actualizado exitosamente');
+    });
+});
+*/
+
 
 // Obtener el número total de usuarios
 router.get('/usuarios/count', (req, res) => {
