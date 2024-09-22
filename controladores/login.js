@@ -7,12 +7,19 @@ const connection = require('../modelo/db'); // Importa la conexión a la base de
 router.post('/login', (req, res) => {
     const { usuario, password } = req.body;
 
-    // Asegúrate de que `usuario` y `password` están definidos
+    // Verificación de que `usuario` y `password` están presentes
     if (!usuario || !password) {
         return res.status(400).send('Usuario y contraseña son requeridos');
     }
 
-    const query = 'SELECT u.id, u.usuario, u.password, ur.id_rol FROM usuarios u LEFT JOIN usuarios_roles ur ON u.id = ur.id_usuario WHERE u.usuario = ?';
+    // Consulta para obtener la información del usuario y su rol
+    const query = `
+        SELECT u.id, u.usuario, u.password, ur.id_rol 
+        FROM usuarios u 
+        LEFT JOIN usuarios_roles ur ON u.id = ur.id_usuario 
+        WHERE u.usuario = ?
+    `;
+
     connection.execute(query, [usuario], (err, results) => {
         if (err) {
             console.error('Error en la consulta:', err);
@@ -20,9 +27,10 @@ router.post('/login', (req, res) => {
         }
 
         if (results.length > 0) {
-            const user = results[0];
-            const hashedPassword = user.password;
+            const user = results[0];  // El usuario encontrado
+            const hashedPassword = user.password; // Contraseña encriptada en la base de datos
 
+            // Compara la contraseña enviada con la almacenada
             bcrypt.compare(password, hashedPassword, (err, result) => {
                 if (err) {
                     console.error('Error al verificar la contraseña:', err);
@@ -30,18 +38,22 @@ router.post('/login', (req, res) => {
                 }
 
                 if (result) {
-                    // Almacena el usuario y rol en la sesión
+                    // Si la contraseña es correcta, almacena el usuario y su rol en la sesión
                     req.session.usuario = user.usuario;
-                    req.session.rol = user.id_rol; // Almacena el rol del usuario desde la tabla usuarios_roles
-                    // Para hacer pruebas, puedes enviar una respuesta JSON en lugar de redirigir
-                    //return res.json({ success: true, message: 'Inicio de sesión exitoso', rol: user.id_rol });
-                    // Para redireccionar:
-                     res.redirect('/?login=success');
+                    req.session.rol = user.id_rol; // Rol del usuario desde la tabla usuarios_roles
+
+                    // Opción 1: Puedes enviar una respuesta en JSON para pruebas
+                    // return res.json({ success: true, message: 'Inicio de sesión exitoso', rol: user.id_rol });
+
+                    // Opción 2: Redirige a la página deseada con el parámetro de éxito
+                    res.redirect('/?login=success');
                 } else {
                     return res.status(401).send('Contraseña incorrecta');
+
                 }
             });
         } else {
+            // Si el usuario no existe
             return res.status(404).send('El usuario no existe');
         }
     });

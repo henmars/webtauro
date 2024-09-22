@@ -222,7 +222,7 @@
                         loginInferNavbar.style.display = 'none';
                         registroInferNavbar.style.display = 'none';
                         userNameChat2 = data.usuario;
-                        userName.innerHTML = `Hola, <strong>${data.usuario}.</strong>`;
+                        userName.innerHTML = `Hola, <strong>${data.usuario}. (${data.rol === 1 ? 'Admin' : data.rol === 2 ? 'Dev' : data.rol === 3 ? 'Cliente' : data.rol === 5 ? 'J. Logística' : data.rol === 6 ? 'G. de Ventas' : data.rol === 7 ? 'Vendedor Online' : data.rol === 8 ? 'Servicio al Cliente' : data.rol === 9 ? 'E. Marketing Digital' : 'Rol no registrado'})</strong>`;
                         userNameSpanChat.innerHTML = `Hola <strong>${data.usuario}</strong>, Bienvenido al chat de soporte. ¿En qué puedo ayudarte hoy?`;
 
                         // Mostrar o ocultar el enlace CRUD según el rol
