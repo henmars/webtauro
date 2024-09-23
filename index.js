@@ -74,7 +74,7 @@ app.get('/crud', isAuthenticated, (req, res) => {
 // Ruta para obtener información del usuario actual
 app.get('/user-info', (req, res) => {
     if (req.session.usuario) {
-        res.json({ usuario: req.session.usuario, rol: req.session.rol }); // Devuelve los datos del usuario
+        res.json({ userId: req.session.userId, usuario: req.session.usuario, rol: req.session.rol }); // Devuelve los datos del usuario
     } else {
         res.json({}); // Si no está autenticado, devuelve un objeto vacío
     }

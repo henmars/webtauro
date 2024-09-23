@@ -146,6 +146,12 @@
         </footer>
     </div>
 
+    <!-- Un ejemplo simple de cómo podrías hacerlo -->
+    <div id="change-password-modal" style="display:none;">
+        <input type="password" id="newPassword" placeholder="Ingresa tu nueva contraseña" />
+        <button onclick="submitNewPassword()">Cambiar Contraseña</button>
+    </div>
+
     <!-- Botón Aéreo -->
     <div id="chatButton" class="position-fixed bottom-0 end-0 m-3" style="display: none;">
         <button class="btn btn-primary rounded-circle bg-danger" id="openChatButton" style="width: 60px; height: 60px;">
@@ -297,6 +303,7 @@
             });
         });
     </script>
+
 
     <!-- Scripts para mostrar que iniciaste sesión exitosamente -->
     <script>
